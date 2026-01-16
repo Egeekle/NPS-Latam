@@ -1,0 +1,33 @@
+name: NPS Latam Drift Monitor
+
+# Run daily or manually
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Run at 8:00 AM daily
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+
+    - name: Set up Python
+      run: uv python install 3.10
+
+    - name: Install dependencies
+      run: uv sync --all-extras --frozen
+
+    - name: Run Drift Detection
+      # Using the module we created which loads from config/drift_config.yaml
+      run: uv run python src/nps_latam/drift_detection.py
+      
+    - name: Upload Drift Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: drift-report
+        path: reports/data_drift_report.html

@@ -1,0 +1,41 @@
+drift_detection:
+  report_output_path: "reports/data_drift_report.html"
+  
+  # Paths relative to project root (or absolute)
+  reference_data_path: "Data/reference_data.csv"
+  current_data_path: "Data/current_data.csv"
+  
+  # Feature definitions for Evidently
+  column_mapping:
+    target: "target"
+    prediction: "prediction"  # if available
+    
+    numerical_features:
+      - "Edad"
+      - "Distancia_Vuelo"
+      - "Wifi_a_bordo"
+      - "Comida_Bebida"
+      - "Comodidad_Asiento"
+      - "Entretenimiento"
+      - "Servicio_a_bordo"
+      - "Espacio_Piernas"
+      - "Manejo_Equipaje"
+      - "Servicio_Check-in"
+      - "Limpieza"
+      - "Comodidad_Horario"
+      - "Facilidad_Reserva"
+      - "Ubicacion_Puerta"
+      - "Embarque_Online"
+
+    categorical_features:
+      # If using the processed dataset, these might be binary/encoded
+      - "Gender_bin"
+      - "CustomerType_bin"
+      - "TypeOfTravel_bin"
+      - "Class_Eco"
+      - "Class_Eco Plus"
+
+  thresholds:
+    # Custom drift thresholds (e.g., Wasserstein distance, PSI, etc.)
+    # 0.05 is standard significance level
+    data_drift: 0.05
