@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/jessieblake/Desktop/Proyects/NPS-Latam/mlruns/170297830942766563/5223db4cce54455d8a9c46daafefe7f1/artifacts
+end_time: 1768589132920
+entry_point_name: ''
+experiment_id: '170297830942766563'
+lifecycle_stage: active
+run_id: 5223db4cce54455d8a9c46daafefe7f1
+run_name: receptive-sponge-591
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1768589127175
+status: 3
+tags: []
+user_id: jessieblake

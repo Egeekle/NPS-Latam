@@ -1,29 +1,20 @@
 version: '3.8'
 
 services:
-  api:
+  nps_latam_system:
     build: .
-    container_name: nps_latam_api
-    command: uv run uvicorn src.nps_latam.api:app --host 0.0.0.0 --port 8000
+    container_name: nps_latam_monolith
     ports:
-      - "8000:8000"
+      - "8000:8000" # API
+      - "8501:8501" # Streamlit
+      - "5001:5000" # MLflow (Mapped to 5001 to avoid AirPlay/System conflicts)
     env_file:
       - .env
-    volumes:
-      - ./Data:/app/Data # Persist logs and data
-    networks:
-      - nps_net
-
-  frontend:
-    build: .
-    container_name: nps_latam_frontend
-    command: uv run streamlit run src/nps_latam/app.py --server.port 8501 --server.address 0.0.0.0
-    ports:
-      - "8501:8501"
     environment:
-      - API_URL=http://api:8000
-    depends_on:
-      - api
+      - API_URL=http://localhost:8000
+    volumes:
+      - ./Data:/app/Data
+      - ./mlruns:/app/mlruns
     networks:
       - nps_net
 

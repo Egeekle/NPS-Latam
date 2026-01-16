@@ -22,10 +22,8 @@ def get_llm():
         raise ValueError("GOOGLE_API_KEY not found in environment variables.")
     
     return ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
-        temperature=0,
-        google_api_key=api_key,
-        convert_system_message_to_human=True
+        model="gemini-2.5-flash",
+        google_api_key=api_key
     )
 
 def analyze_feedback_batch(texts):
@@ -36,18 +34,12 @@ def analyze_feedback_batch(texts):
     llm = get_llm()
     parser = JsonOutputParser(pydantic_object=TextAnalysis)
 
-    prompt = PromptTemplate(
-        template="""
-        You are an expert data analyst for an airline. 
-        Analyze the following customer text and extract structured features.
-        
-        Text: "{text}"
-        
-        {format_instructions}
-        """,
-        input_variables=["text"],
-        partial_variables={"format_instructions": parser.get_format_instructions()},
-    )
+    from langchain_core.prompts import ChatPromptTemplate
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are an expert data analyst for an airline. Analyze the provided customer text and extract structured features as JSON.\n{format_instructions}"),
+        ("human", "{text}")
+    ]).partial(format_instructions=parser.get_format_instructions())
 
     chain = prompt | llm | parser
 
@@ -77,6 +69,23 @@ def analyze_feedback_batch(texts):
     features_df['sentiment_score'] = features_df['sentiment'].map(sentiment_map).fillna(0)
     
     return features_df
+
+def calculate_csi(df: pd.DataFrame) -> float:
+    """
+    Calculates the Customer Sentiment Index (CSI) likely on a 0-100 scale.
+    Formula: (Average Sentiment Score (from -1 to 1) + 1) * 50
+    Negative (-1) -> 0
+    Neutral (0) -> 50
+    Positive (1) -> 100
+    """
+    if df.empty or 'sentiment_score' not in df.columns:
+        return 0.0
+    
+    avg_sentiment = df['sentiment_score'].mean()
+    if pd.isna(avg_sentiment):
+        return 0.0
+    
+    return (avg_sentiment + 1) * 50
 
 def generate_synthetic_feedback(row):
     """

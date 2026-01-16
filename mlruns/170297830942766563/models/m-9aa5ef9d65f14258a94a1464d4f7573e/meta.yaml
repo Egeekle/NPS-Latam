@@ -1,0 +1,10 @@
+artifact_location: file:///Users/jessieblake/Desktop/Proyects/NPS-Latam/mlruns/170297830942766563/models/m-9aa5ef9d65f14258a94a1464d4f7573e/artifacts
+creation_timestamp: 1768589129971
+experiment_id: '170297830942766563'
+last_updated_timestamp: 1768589131981
+model_id: m-9aa5ef9d65f14258a94a1464d4f7573e
+model_type: null
+name: random_forest_model
+source_run_id: 5223db4cce54455d8a9c46daafefe7f1
+status: 2
+status_message: null
